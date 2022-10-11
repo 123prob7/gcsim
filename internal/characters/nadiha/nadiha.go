@@ -70,6 +70,13 @@ func (c *char) Init() error {
 		default:
 		}
 	}
+
+	if c.Base.Cons >= 1 {
+		c.pyroCount++
+		c.electroCount++
+		c.hydroCount++
+	}
+
 	if c.pyroCount > 2 {
 		c.pyroCount = 2
 	}

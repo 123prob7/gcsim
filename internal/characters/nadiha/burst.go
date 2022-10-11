@@ -20,12 +20,6 @@ func init() {
 }
 
 func (c *char) Burst(p map[string]int) action.ActionInfo {
-	if c.Base.Cons >= 1 {
-		c.pyroCount++
-		c.electroCount++
-		c.hydroCount++
-	}
-
 	if c.Base.Cons >= 6 {
 		c.c6Stacks = 6
 		c.AddStatus(nadihaC6Key, 10*60, false)
