@@ -11,8 +11,8 @@ import (
 const a1EMLimit = 250
 
 func (c *char) a1() {
-	c.Core.Events.Subscribe(event.OnAttackWillLand, func(args ...interface{}) bool {
-		ae := args[1].(*combat.AttackEvent)
+	c.Core.Events.Subscribe(event.OnCharacterSwap, func(args ...interface{}) bool {
+		next := args[1].(int)
 
 		active := c.Core.Player.ActiveChar()
 		active.AddStatMod(character.StatMod{
@@ -22,7 +22,7 @@ func (c *char) a1() {
 				if c.Core.Status.Duration(burstKey) == 0 {
 					return val, false
 				}
-				if ae.Info.ActorIndex != c.Core.Player.ActiveChar().Index {
+				if next != c.Core.Player.ActiveChar().Index {
 					return val, false
 				}
 
