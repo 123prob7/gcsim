@@ -3,7 +3,6 @@ package nadiha
 import (
 	"github.com/genshinsim/gcsim/pkg/core/attributes"
 	"github.com/genshinsim/gcsim/pkg/core/combat"
-	"github.com/genshinsim/gcsim/pkg/core/event"
 	"github.com/genshinsim/gcsim/pkg/core/player/character"
 	"github.com/genshinsim/gcsim/pkg/modifier"
 )
@@ -11,37 +10,41 @@ import (
 const a1EMLimit = 250
 
 func (c *char) a1() {
-	c.Core.Events.Subscribe(event.OnCharacterSwap, func(args ...interface{}) bool {
-		next := args[1].(int)
+	var highestEMShare float64
+	for _, this := range c.Core.Player.Chars() {
+		if this.Stat(attributes.EM) > highestEMShare {
+			highestEMShare = this.Stat(attributes.EM)
+		}
+	}
+	highestEMShare *= .25
+	if highestEMShare > a1EMLimit {
+		highestEMShare = a1EMLimit
+	}
 
-		active := c.Core.Player.ActiveChar()
-		active.AddStatMod(character.StatMod{
-			Base: modifier.NewBase("nadiha-a1", -1),
+	for _, this := range c.Core.Player.Chars() {
+		ind := this.Index
+		this.AddStatMod(character.StatMod{
+			Base:         modifier.NewBase("nadiha-a1", -1),
+			AffectedStat: attributes.EM,
 			Amount: func() ([]float64, bool) {
 				val := make([]float64, attributes.EndStatType)
+				// c.Core.Log.NewEvent("nadiha a1 checking", glog.LogSimEvent, ind).
+				// 	Write("nadihaburst", c.Core.Status.Duration(burstKey)).
+				// 	Write("ind", ind).
+				// 	Write("active", c.Core.Player.ActiveChar().Index).
+				// 	Write("emShare", highestEMShare)
 				if c.Core.Status.Duration(burstKey) == 0 {
 					return val, false
 				}
-				if next != c.Core.Player.ActiveChar().Index {
+				if ind != c.Core.Player.ActiveChar().Index {
 					return val, false
 				}
 
-				highestEMShare := active.Stat(attributes.EM)
-				for _, c := range c.Core.Player.Chars() {
-					if c.Stat(attributes.EM) > highestEMShare {
-						highestEMShare = c.Stat(attributes.EM)
-					}
-				}
-				highestEMShare *= .2
-				if highestEMShare > a1EMLimit {
-					highestEMShare = a1EMLimit
-				}
 				val[attributes.EM] = highestEMShare
 				return val, true
 			},
 		})
-		return false
-	}, "nadiha-a1")
+	}
 }
 
 func (c *char) a4() {

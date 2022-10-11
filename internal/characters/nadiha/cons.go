@@ -60,7 +60,8 @@ func (c *char) c4() {
 	}
 
 	c.AddStatMod(character.StatMod{
-		Base: modifier.NewBase("nadiha-c4", -1),
+		Base:         modifier.NewBase("nadiha-c4", -1),
+		AffectedStat: attributes.EM,
 		Amount: func() ([]float64, bool) {
 			val := make([]float64, attributes.EndStatType)
 
