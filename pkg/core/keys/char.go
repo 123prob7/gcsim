@@ -82,6 +82,7 @@ const (
 	Sara
 	Lisa
 	Mona
+	Nadiha
 	Ningguang
 	Noelle
 	Qiqi
@@ -158,6 +159,7 @@ var charNames = []string{
 	"sara",
 	"lisa",
 	"mona",
+	"nadiha",
 	"ningguang",
 	"noelle",
 	"qiqi",
@@ -234,6 +236,7 @@ var charPrettyName = []string{
 	"Sara",
 	"Lisa",
 	"Mona",
+	"Nadiha",
 	"Ningguang",
 	"Noelle",
 	"Qiqi",
@@ -305,6 +308,7 @@ var CharKeyToEle = map[Char]attributes.Element{
 	Sara:             attributes.Electro,
 	Lisa:             attributes.Electro,
 	Mona:             attributes.Hydro,
+	Nadiha:           attributes.Dendro,
 	Ningguang:        attributes.Geo,
 	Noelle:           attributes.Geo,
 	Qiqi:             attributes.Cryo,
