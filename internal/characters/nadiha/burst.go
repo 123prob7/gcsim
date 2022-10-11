@@ -3,7 +3,6 @@ package nadiha
 import (
 	"github.com/genshinsim/gcsim/internal/frames"
 	"github.com/genshinsim/gcsim/pkg/core/action"
-	"github.com/genshinsim/gcsim/pkg/core/attributes"
 	"github.com/genshinsim/gcsim/pkg/core/glog"
 )
 
@@ -21,10 +20,6 @@ func init() {
 }
 
 func (c *char) Burst(p map[string]int) action.ActionInfo {
-	c.pyroCount = 0
-	c.electroCount = 0
-	c.hydroCount = 0
-
 	if c.Base.Cons >= 1 {
 		c.pyroCount++
 		c.electroCount++
@@ -34,27 +29,6 @@ func (c *char) Burst(p map[string]int) action.ActionInfo {
 	if c.Base.Cons >= 6 {
 		c.c6Stacks = 6
 		c.AddStatus(nadihaC6Key, 10*60, false)
-	}
-
-	for _, this := range c.Core.Player.Chars() {
-		switch this.Base.Element {
-		case attributes.Pyro:
-			c.pyroCount++
-		case attributes.Electro:
-			c.electroCount++
-		case attributes.Hydro:
-			c.hydroCount++
-		default:
-		}
-	}
-	if c.pyroCount > 2 {
-		c.pyroCount = 2
-	}
-	if c.electroCount > 2 {
-		c.electroCount = 2
-	}
-	if c.hydroCount > 2 {
-		c.hydroCount = 2
 	}
 
 	hydroBonusDuration := int(burstHydroBonus[c.hydroCount][c.TalentLvlBurst()] * 60)

@@ -10,6 +10,7 @@ import (
 const a1EMLimit = 250
 
 func (c *char) a1() {
+	// TODO: recheck this. Should it also work with em buffer??
 	var highestEMShare float64
 	for _, this := range c.Core.Player.Chars() {
 		if this.Stat(attributes.EM) > highestEMShare {
@@ -28,11 +29,6 @@ func (c *char) a1() {
 			AffectedStat: attributes.EM,
 			Amount: func() ([]float64, bool) {
 				val := make([]float64, attributes.EndStatType)
-				// c.Core.Log.NewEvent("nadiha a1 checking", glog.LogSimEvent, ind).
-				// 	Write("nadihaburst", c.Core.Status.Duration(burstKey)).
-				// 	Write("ind", ind).
-				// 	Write("active", c.Core.Player.ActiveChar().Index).
-				// 	Write("emShare", highestEMShare)
 				if c.Core.Status.Duration(burstKey) == 0 {
 					return val, false
 				}

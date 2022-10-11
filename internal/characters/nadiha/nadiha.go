@@ -3,6 +3,7 @@ package nadiha
 import (
 	tmpl "github.com/genshinsim/gcsim/internal/template/character"
 	"github.com/genshinsim/gcsim/pkg/core"
+	"github.com/genshinsim/gcsim/pkg/core/attributes"
 	"github.com/genshinsim/gcsim/pkg/core/keys"
 	"github.com/genshinsim/gcsim/pkg/core/player/character"
 	"github.com/genshinsim/gcsim/pkg/core/player/character/profile"
@@ -57,6 +58,27 @@ func (c *char) Init() error {
 	c.a1()
 	c.a4()
 	c.c2()
+
+	for _, this := range c.Core.Player.Chars() {
+		switch this.Base.Element {
+		case attributes.Pyro:
+			c.pyroCount++
+		case attributes.Electro:
+			c.electroCount++
+		case attributes.Hydro:
+			c.hydroCount++
+		default:
+		}
+	}
+	if c.pyroCount > 2 {
+		c.pyroCount = 2
+	}
+	if c.electroCount > 2 {
+		c.electroCount = 2
+	}
+	if c.hydroCount > 2 {
+		c.hydroCount = 2
+	}
 
 	return nil
 }
