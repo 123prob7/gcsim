@@ -9,18 +9,10 @@ import (
 
 const a1EMLimit = 250
 
+// TODO: recheck this a1 if it snapshots or not?
+// It shouldnt snapshot. Bc % em buffs dont benefit from other % em buff sources.
 func (c *char) a1() {
-	// TODO: recheck this. Should it also work with em buffer??
-	var highestEMShare float64
-	for _, this := range c.Core.Player.Chars() {
-		if this.Stat(attributes.EM) > highestEMShare {
-			highestEMShare = this.Stat(attributes.EM)
-		}
-	}
-	highestEMShare *= .25
-	if highestEMShare > a1EMLimit {
-		highestEMShare = a1EMLimit
-	}
+	c.a1UpdateEM()
 
 	for _, this := range c.Core.Player.Chars() {
 		ind := this.Index
@@ -36,12 +28,44 @@ func (c *char) a1() {
 					return val, false
 				}
 
-				val[attributes.EM] = highestEMShare
+				val[attributes.EM] = c.highestEMShare
 				return val, true
 			},
 		})
 	}
 }
+
+func (c *char) a1UpdateEM() {
+	for _, this := range c.Core.Player.Chars() {
+		if this.Stat(attributes.EM) > c.highestEMShare {
+			c.highestEMShare = this.Stat(attributes.EM)
+		}
+	}
+	c.highestEMShare *= .25
+	if c.highestEMShare > a1EMLimit {
+		c.highestEMShare = a1EMLimit
+	}
+}
+
+// // TODO: recheck this. Should it also work with em buffer??
+// func (c *char) a1QueueUpdateEMTask(src int) func() {
+// 	return func() {
+// 		if src != c.a1Src {
+// 			return
+// 		}
+
+// 		prev := c.highestEMShare
+// 		c.a1UpdateEM()
+// 		if prev != c.highestEMShare {
+// 			c.Core.Log.NewEvent("nadiha a1 updating em", glog.LogCharacterEvent, c.Index).
+// 				Write("prev", prev).
+// 				Write("new", c.highestEMShare).
+// 				Write("src", src)
+// 		}
+
+// 		// c.Core.Tasks.Add(c.a1QueueUpdateEMTask(src), 60)
+// 	}
+// }
 
 func (c *char) a4() {
 	val := make([]float64, attributes.EndStatType)

@@ -10,6 +10,7 @@ var burstFrames []int
 
 const burstKey = "nadihaburst"
 
+// TODO: check frame
 func init() {
 	burstFrames = frames.InitAbilSlice(128) // Q -> D/J
 	burstFrames[action.ActionAttack] = 127  // Q -> N1
@@ -28,7 +29,11 @@ func (c *char) Burst(p map[string]int) action.ActionInfo {
 	hydroBonusDuration := int(burstHydroBonus[c.hydroCount][c.TalentLvlBurst()] * 60)
 	c.Core.Status.Add(burstKey, 15*60+hydroBonusDuration)
 
+	// c.a1Src = c.Core.F
+	// c.Core.Tasks.Add(c.a1QueueUpdateEMTask(c.a1Src), 1)
+
 	// Cannot be prefed particles
+	// TODO: check frame
 	c.ConsumeEnergy(10)
 	c.SetCDWithDelay(action.ActionBurst, 13.5*60, 10)
 

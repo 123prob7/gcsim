@@ -24,6 +24,8 @@ type char struct {
 	triParticleIcd    int
 	c6Stacks          int
 	c6Icd             int
+	highestEMShare    float64
+	// a1Src             int
 }
 
 func NewChar(s *core.Core, w *character.CharWrapper, _ profile.CharacterProfile) error {
@@ -42,6 +44,7 @@ func NewChar(s *core.Core, w *character.CharWrapper, _ profile.CharacterProfile)
 	c.electroCount = 0
 	c.hydroCount = 0
 	c.triParticleIcd = 0
+	// c.a1Src = 0
 
 	if c.Base.Cons >= 6 {
 		c.c6Stacks = 6

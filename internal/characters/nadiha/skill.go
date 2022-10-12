@@ -15,6 +15,7 @@ var (
 	skillHoldFrames []int
 )
 
+// TODO: check frame
 func init() {
 	skillFrames = frames.InitAbilSlice(24)
 	skillFrames[action.ActionDash] = 24
@@ -26,7 +27,7 @@ func init() {
 }
 
 const (
-	skillHitmark     = 8
+	skillHitmark     = 8 // TODO: check frame
 	seedOfSkandhaKey = "skandha"
 	triKarmaDuration = 25 * 60
 	maxMarkedTargets = 8
@@ -189,6 +190,7 @@ func (c *char) triKarmaTickOnReaction() {
 			c.Core.QueueAttack(ai, combat.NewDefSingleTarget(e.Key(), combat.TargettableEnemy), 5, 5)
 		}
 
+		// TODO: check frame, particle icd
 		if c.triParticleIcd < c.Core.F {
 			c.triParticleIcd = c.Core.F + 7.5*60
 			c.Core.QueueParticle("nadiha", 3, attributes.Dendro, 80)

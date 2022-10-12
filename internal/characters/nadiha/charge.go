@@ -9,9 +9,11 @@ import (
 
 var chargeFrames []int
 
+// TODO: check frame
 // hitmark frame, includes CA windup
 const chargeHitmark = 18
 
+// TODO: check frame
 func init() {
 	chargeFrames = frames.InitAbilSlice(78)
 	chargeFrames[action.ActionAttack] = 62
