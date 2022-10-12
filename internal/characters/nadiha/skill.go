@@ -45,7 +45,7 @@ func (c *char) Skill(p map[string]int) action.ActionInfo {
 		t = maxMarkedTargets
 	}
 
-	// reset counter
+	// recount marked targets
 	c.markedTargetCount = 0
 	for _, t := range c.Core.Combat.Enemies() {
 		if targetHasSkandhaKey(t) {
@@ -129,7 +129,7 @@ func (c *char) applyMarkCB(a combat.AttackCB) {
 	if !ok {
 		return
 	}
-	if c.markedTargetCount > maxMarkedTargets {
+	if c.markedTargetCount >= maxMarkedTargets {
 		return
 	}
 
