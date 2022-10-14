@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 import (
 	tmpl "github.com/genshinsim/gcsim/internal/template/character"
@@ -10,7 +10,13 @@ import (
 )
 
 func init() {
-	core.RegisterCharFunc(keys.Nadiha, NewChar)
+	core.RegisterCharFunc(keys.Nahida, NewChar)
+}
+
+type elementsCounter struct {
+	pyro    int
+	electro int
+	hydro   int
 }
 
 type char struct {
@@ -18,14 +24,10 @@ type char struct {
 	triIcd            int
 	triInterval       int
 	markedTargetCount int
-	pyroCount         int
-	electroCount      int
-	hydroCount        int
+	qCounter          elementsCounter
 	triParticleIcd    int
 	c6Stacks          int
 	c6Icd             int
-	highestEMShare    float64
-	// a1Src             int
 }
 
 func NewChar(s *core.Core, w *character.CharWrapper, _ profile.CharacterProfile) error {
@@ -40,11 +42,8 @@ func NewChar(s *core.Core, w *character.CharWrapper, _ profile.CharacterProfile)
 	c.triIcd = 0
 	c.triInterval = 2.5 * 60
 	c.markedTargetCount = 0
-	c.pyroCount = 0
-	c.electroCount = 0
-	c.hydroCount = 0
+	c.qCounter = elementsCounter{pyro: 0, electro: 0, hydro: 0}
 	c.triParticleIcd = 0
-	// c.a1Src = 0
 
 	if c.Base.Cons >= 6 {
 		c.c6Stacks = 6
@@ -65,29 +64,29 @@ func (c *char) Init() error {
 	for _, this := range c.Core.Player.Chars() {
 		switch this.Base.Element {
 		case attributes.Pyro:
-			c.pyroCount++
+			c.qCounter.pyro++
 		case attributes.Electro:
-			c.electroCount++
+			c.qCounter.electro++
 		case attributes.Hydro:
-			c.hydroCount++
+			c.qCounter.hydro++
 		default:
 		}
 	}
 
 	if c.Base.Cons >= 1 {
-		c.pyroCount++
-		c.electroCount++
-		c.hydroCount++
+		c.qCounter.pyro++
+		c.qCounter.electro++
+		c.qCounter.hydro++
 	}
 
-	if c.pyroCount > 2 {
-		c.pyroCount = 2
+	if c.qCounter.pyro > 2 {
+		c.qCounter.pyro = 2
 	}
-	if c.electroCount > 2 {
-		c.electroCount = 2
+	if c.qCounter.electro > 2 {
+		c.qCounter.electro = 2
 	}
-	if c.hydroCount > 2 {
-		c.hydroCount = 2
+	if c.qCounter.hydro > 2 {
+		c.qCounter.hydro = 2
 	}
 
 	return nil

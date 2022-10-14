@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 var (
 	attack = [][]float64{

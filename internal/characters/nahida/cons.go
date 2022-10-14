@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 import (
 	"github.com/genshinsim/gcsim/pkg/core/attributes"
@@ -10,7 +10,7 @@ import (
 	"github.com/genshinsim/gcsim/pkg/modifier"
 )
 
-const nadihaC6Key = "nadihac6"
+const nahidaC6Key = "nahidac6"
 
 // Burning, Bloom, Hyperbloom, and Burgeon Reaction DMG can score CRIT Hits. CRIT Rate and CRIT DMG are fixed at 20% and 100% respectively
 // Within 8s of being affected by Quicken, Aggravate, Spread, DEF is decreased by 30%
@@ -30,7 +30,7 @@ func (c *char) c2() {
 		}
 
 		return false
-	}, "nadiha-c2")
+	}, "nahida-c2")
 
 	cb := func(args ...interface{}) bool {
 		t := args[0].(combat.Target)
@@ -40,15 +40,15 @@ func (c *char) c2() {
 		}
 
 		e.AddDefMod(enemy.DefMod{
-			Base:  modifier.NewBaseWithHitlag("nadiha-c2", 8*60),
+			Base:  modifier.NewBaseWithHitlag("nahida-c2", 8*60),
 			Value: -0.3,
 		})
 		return false
 	}
 
-	c.Core.Events.Subscribe(event.OnQuicken, cb, "nadiha-c2")
-	c.Core.Events.Subscribe(event.OnAggravate, cb, "nadiha-c2")
-	c.Core.Events.Subscribe(event.OnSpread, cb, "nadiha-c2")
+	c.Core.Events.Subscribe(event.OnQuicken, cb, "nahida-c2")
+	c.Core.Events.Subscribe(event.OnAggravate, cb, "nahida-c2")
+	c.Core.Events.Subscribe(event.OnSpread, cb, "nahida-c2")
 }
 
 // C4: The Stem of Manifest Inference
@@ -60,7 +60,7 @@ func (c *char) c4() {
 	}
 
 	c.AddStatMod(character.StatMod{
-		Base:         modifier.NewBase("nadiha-c4", -1),
+		Base:         modifier.NewBase("nahida-c4", -1),
 		AffectedStat: attributes.EM,
 		Amount: func() ([]float64, bool) {
 			val := make([]float64, attributes.EndStatType)
@@ -93,18 +93,18 @@ func (c *char) c6Cb(a combat.AttackCB) {
 	}
 	// ran out of stack
 	if c.c6Stacks == 0 {
-		c.DeleteStatus(nadihaC6Key)
+		c.DeleteStatus(nahidaC6Key)
 		return
 	}
-	// status expired, no need to check nadihaburst field
-	if !c.StatusIsActive(nadihaC6Key) {
+	// status expired, no need to check nahidaburst field
+	if !c.StatusIsActive(nahidaC6Key) {
 		return
 	}
 
 	c.c6Icd = c.Core.F + .2*60
 	c.c6Stacks--
 
-	pyroBonus := burstPyroBonus[c.pyroCount][c.TalentLvlBurst()]
+	pyroBonus := burstPyroBonus[c.qCounter.pyro][c.TalentLvlBurst()]
 	ai := combat.AttackInfo{
 		ActorIndex: c.Index,
 		Abil:       "Tri-Karma Purification (C6)",
@@ -133,6 +133,6 @@ func (c *char) c6Cb(a combat.AttackCB) {
 
 	if c.triParticleIcd < c.Core.F {
 		c.triParticleIcd = c.Core.F + 7.5*60
-		c.Core.QueueParticle("nadiha", 3, attributes.Dendro, 80)
+		c.Core.QueueParticle("nahida", 3, attributes.Dendro, 80)
 	}
 }

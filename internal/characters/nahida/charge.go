@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 import (
 	"github.com/genshinsim/gcsim/internal/frames"

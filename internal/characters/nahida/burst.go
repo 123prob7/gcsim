@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 import (
 	"github.com/genshinsim/gcsim/internal/frames"
@@ -8,7 +8,7 @@ import (
 
 var burstFrames []int
 
-const burstKey = "nadihaburst"
+const burstKey = "nahidaburst"
 
 // TODO: check frame
 func init() {
@@ -23,21 +23,18 @@ func init() {
 func (c *char) Burst(p map[string]int) action.ActionInfo {
 	if c.Base.Cons >= 6 {
 		c.c6Stacks = 6
-		c.AddStatus(nadihaC6Key, 10*60, false)
+		c.AddStatus(nahidaC6Key, 10*60, false)
 	}
 
-	hydroBonusDuration := int(burstHydroBonus[c.hydroCount][c.TalentLvlBurst()] * 60)
+	hydroBonusDuration := int(burstHydroBonus[c.qCounter.hydro][c.TalentLvlBurst()] * 60)
 	c.Core.Status.Add(burstKey, 15*60+hydroBonusDuration)
-
-	// c.a1Src = c.Core.F
-	// c.Core.Tasks.Add(c.a1QueueUpdateEMTask(c.a1Src), 1)
 
 	// Cannot be prefed particles
 	// TODO: check frame
 	c.ConsumeEnergy(10)
 	c.SetCDWithDelay(action.ActionBurst, 13.5*60, 10)
 
-	c.Core.Log.NewEvent("nadihaburst added", glog.LogCharacterEvent, c.Index).
+	c.Core.Log.NewEvent("nahidaburst added", glog.LogCharacterEvent, c.Index).
 		Write("expiry", 15*60+hydroBonusDuration).
 		Write("hydroBonusDuration", hydroBonusDuration)
 

@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 import (
 	"github.com/genshinsim/gcsim/pkg/core/attributes"
@@ -9,15 +9,23 @@ import (
 
 const a1EMLimit = 250
 
-// TODO: recheck this a1 if it snapshots or not?
-// It shouldnt snapshot. Bc % em buffs dont benefit from other % em buff sources.
+// TODO: recheck how a1 works (how it interacts with EM buffers). Assuming it just checks characters' stats onset
 func (c *char) a1() {
-	c.a1UpdateEM()
+	var emShare float64 = 0
+	for _, this := range c.Core.Player.Chars() {
+		if this.Stat(attributes.EM) > emShare {
+			emShare = this.Stat(attributes.EM)
+		}
+	}
+	emShare *= .25
+	if emShare > a1EMLimit {
+		emShare = a1EMLimit
+	}
 
 	for _, this := range c.Core.Player.Chars() {
 		ind := this.Index
 		this.AddStatMod(character.StatMod{
-			Base:         modifier.NewBase("nadiha-a1", -1),
+			Base:         modifier.NewBase("nahida-a1", -1),
 			AffectedStat: attributes.EM,
 			Amount: func() ([]float64, bool) {
 				val := make([]float64, attributes.EndStatType)
@@ -28,49 +36,17 @@ func (c *char) a1() {
 					return val, false
 				}
 
-				val[attributes.EM] = c.highestEMShare
+				val[attributes.EM] = emShare
 				return val, true
 			},
 		})
 	}
 }
 
-func (c *char) a1UpdateEM() {
-	for _, this := range c.Core.Player.Chars() {
-		if this.Stat(attributes.EM) > c.highestEMShare {
-			c.highestEMShare = this.Stat(attributes.EM)
-		}
-	}
-	c.highestEMShare *= .25
-	if c.highestEMShare > a1EMLimit {
-		c.highestEMShare = a1EMLimit
-	}
-}
-
-// // TODO: recheck this. Should it also work with em buffer??
-// func (c *char) a1QueueUpdateEMTask(src int) func() {
-// 	return func() {
-// 		if src != c.a1Src {
-// 			return
-// 		}
-
-// 		prev := c.highestEMShare
-// 		c.a1UpdateEM()
-// 		if prev != c.highestEMShare {
-// 			c.Core.Log.NewEvent("nadiha a1 updating em", glog.LogCharacterEvent, c.Index).
-// 				Write("prev", prev).
-// 				Write("new", c.highestEMShare).
-// 				Write("src", src)
-// 		}
-
-// 		// c.Core.Tasks.Add(c.a1QueueUpdateEMTask(src), 60)
-// 	}
-// }
-
 func (c *char) a4() {
 	val := make([]float64, attributes.EndStatType)
 	c.AddAttackMod(character.AttackMod{
-		Base: modifier.NewBase("nadiha-a4", -1),
+		Base: modifier.NewBase("nahida-a4", -1),
 		Amount: func(atk *combat.AttackEvent, t combat.Target) ([]float64, bool) {
 			if atk.Info.AttackTag != combat.AttackTagElementalArt {
 				return val, false

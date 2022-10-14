@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 import (
 	"fmt"

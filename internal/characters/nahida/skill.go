@@ -1,4 +1,4 @@
-package nadiha
+package nahida
 
 import (
 	"github.com/genshinsim/gcsim/internal/frames"
@@ -144,7 +144,7 @@ func (c *char) applyMarkCB(a combat.AttackCB) {
 		Write("expiry", t.StatusExpiry(seedOfSkandhaKey))
 }
 
-// queue skill tick dmg to all enemies marked by nadiha skill
+// queue skill tick dmg to all enemies marked by nahida skill
 func (c *char) triKarmaTickOnReaction() {
 	cb := func(args ...interface{}) bool {
 		t := args[0].(combat.Target)
@@ -164,8 +164,8 @@ func (c *char) triKarmaTickOnReaction() {
 			electroBonus int
 		)
 		if c.Core.Status.Duration(burstKey) > 0 {
-			pyroBonus = burstPyroBonus[c.pyroCount][c.TalentLvlBurst()]
-			electroBonus = int(burstElectroBonus[c.electroCount][c.TalentLvlBurst()] * 60)
+			pyroBonus = burstPyroBonus[c.qCounter.pyro][c.TalentLvlBurst()]
+			electroBonus = int(burstElectroBonus[c.qCounter.electro][c.TalentLvlBurst()] * 60)
 		}
 
 		ai := combat.AttackInfo{
@@ -193,7 +193,7 @@ func (c *char) triKarmaTickOnReaction() {
 		// TODO: check frame, particle icd
 		if c.triParticleIcd < c.Core.F {
 			c.triParticleIcd = c.Core.F + 7.5*60
-			c.Core.QueueParticle("nadiha", 3, attributes.Dendro, 80)
+			c.Core.QueueParticle("nahida", 3, attributes.Dendro, 80)
 		}
 
 		c.Core.Log.NewEvent("Tri-Karma ticking", glog.LogCharacterEvent, c.Index).
@@ -206,7 +206,7 @@ func (c *char) triKarmaTickOnReaction() {
 	}
 
 	for i := event.ReactionEventStartDelim + 1; i < event.ReactionEventEndDelim; i++ {
-		c.Core.Events.Subscribe(i, cb, "nadiha-skill")
+		c.Core.Events.Subscribe(i, cb, "nahida-skill")
 	}
 }
 

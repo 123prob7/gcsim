@@ -1958,7 +1958,7 @@ var CharBaseMap = map[keys.Char]CharBase{
 			},
 		},
 	},
-	keys.Nadiha: {
+	keys.Nahida: {
 		Rarity:      5,
 		Body:        profile.BodyLoli,
 		Element:     attributes.Dendro,
